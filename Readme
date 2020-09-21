@@ -1,0 +1,73 @@
+# FM-index 
+
+Release Date: 21th September, 2020
+
+Author
+
+	~Changyong Yu (Northeastern University in CHINA)
+	~Chu Zhao (Northeastern University in CHINA)
+	~Yu Wang (Northeastern University in CHINA)
+
+1.Introduction
+--
+
+  FM-index is a space-time effective suffix search algorithm proposed by Ferragina and Manzini in 2000,which is based on the BWT algorithm.
+
+  Be different of the suffix arrays, FM-index is an index structure that supports backward search. It adds Occ array and BWT string to record the context information of characters on the basis of suffix array. It is a lossless data compression structure.
+
+  The compressed FM-index is composed of three parts of information, 1)BWT,2)SA,3)occ array,c array. BWT is the abbreviation of The Burrows-Wheeler Transform.It is the transformation method of the reference genome,that is,the reference genome is lexicographically reordered.The purpose of the transformation is to facilitate subsequent search.The SA is the suffix array, which saves the true position in the original sequence of the suffix’s first character in the BWT matrix;occ(i,r) represents the number of character i that appear before the rth line in the BWT string;c[i] represents the number of all characters whose lexicographic order is less than character i. 
+
+  The time complexity of FM-index search is O(m), which has nothing to do with the sequence length in the reference library (m is the length of the read).In the FM-index algorithm, the space required for each base is 0.5-2 bytes, which greatly reduces space consumption and can complete an accurate search for a query string in linear time.
+
+  In general, FM-index can effectively construct a lossless index for large-scale genomes.We believe that the tool will improve the performance of data analysis with the bottleneck of large-scale data.
+
+
+2.Format of FM-index
+--
+
+	-kmerxxxin
+	-kmerxxxout
+	-kmerxxx
+		~binary files of branching k-mers
+		~xxx is the k-mer length
+		~each r Bytes as a k-mer,where r=8*([kmer_len/32]+sign(kmer_len/32)).
+	
+	-kmerxxxinad
+	-kmerxxxoutad
+	-kmerxxxad
+		~binary files of adjacent information of branching k-mers
+		~xxx is the k-mer length
+		~the i-th Byte assigns the adjacent information of the i-th k-mer in the corresponding files. 
+	
+	-posixxxinyyy
+	-posixxxoutyyy
+		~binary file of bit vector of genomes
+		~xxx is the k-mer length
+		~yyy is the id of the genome
+		~the i-th bit label the branching information of the i-th position in the genome with id:yyy.
+		
+	-unipathxxx
+		~binary file of uni-path
+		~xxx is the k-mer length
+		~each 8 Bytes as a uni-path, the first 39 bits indicate the starting position, the next 17 bits indicate the length and the last 8 bits indicate the genome id. 
+	
+	-poslistxxx
+		~binary file of position lists
+		~xxx is the k-mer length
+		~the position list of each edge is saved in three parts 
+		1)first r Bytes as a (k+1)-mer, 
+		2)the next 8 Bytes as the length of the list and 
+		3) the positions, each position of which is saved in 8 Bytes. where r=8*([(kmer_len+1)/32]+sign((kmer_len+1)/32)). The position lists of all edges are saved one by one. 	
+
+3.License
+--
+
+	See LICENSE.txt
+
+4.Contacts
+--
+
+	Please e-mail your feedback at cyyneu@126.com.
+
+
+
